@@ -136,6 +136,7 @@ import com.android.systemui.controls.ui.ControlsActivity;
 import com.android.systemui.controls.ui.ControlsUiController;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.GlobalActions.GlobalActionsManager;
 import com.android.systemui.plugins.GlobalActionsPanelPlugin;
 import com.android.systemui.scrim.ScrimDrawable;
@@ -275,6 +276,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final DialogLaunchAnimator mDialogLaunchAnimator;
     private final ControlsComponent mControlsComponent;
+    private final ActivityStarter mActivityStarter;
 
     @VisibleForTesting
     public enum GlobalActionsEvent implements UiEventLogger.UiEventEnum {
@@ -384,7 +386,8 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
             Optional<CentralSurfaces> centralSurfacesOptional,
             KeyguardUpdateMonitor keyguardUpdateMonitor,
             DialogLaunchAnimator dialogLaunchAnimator,
-            ControlsComponent controlsComponent) {
+            ControlsComponent controlsComponent,
+            ActivityStarter activityStarter) {
         mContext = context;
         mWindowManagerFuncs = windowManagerFuncs;
         mAudioManager = audioManager;
@@ -419,6 +422,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
         mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         mDialogLaunchAnimator = dialogLaunchAnimator;
         mControlsComponent = controlsComponent;
+        mActivityStarter = activityStarter;
 
         // receive broadcasts
         IntentFilter filter = new IntentFilter();
@@ -820,6 +824,22 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
         }
     }
 
+    private boolean rebootAction(boolean safeMode) {
+        return rebootAction(safeMode, null);
+    }
+
+    private boolean rebootAction(boolean safeMode, String reason) {
+        if (mKeyguardStateController.isMethodSecure() && mKeyguardStateController.isShowing()) {
+            mActivityStarter.postQSRunnableDismissingKeyguard(() -> {
+                mWindowManagerFuncs.reboot(safeMode, reason);
+            });
+            return true;
+        } else {
+            mWindowManagerFuncs.reboot(safeMode, reason);
+            return true;
+        }
+    }
+
     /**
      * Implements {@link GlobalActionsPanelPlugin.Callbacks#dismissGlobalActionsMenu()}, which is
      * called when the quick access wallet requests dismissal.
@@ -870,7 +890,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
             }
             mUiEventLogger.log(GlobalActionsEvent.GA_SHUTDOWN_LONG_PRESS);
             if (!mUserManager.hasUserRestriction(UserManager.DISALLOW_SAFE_BOOT)) {
-                mWindowManagerFuncs.reboot(true, null);
+                rebootAction(true);
                 return true;
             }
             return false;
@@ -895,7 +915,13 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
             }
             mUiEventLogger.log(GlobalActionsEvent.GA_SHUTDOWN_PRESS);
             // shutdown by making sure radio and power are handled accordingly.
-            mWindowManagerFuncs.shutdown();
+            if (mKeyguardStateController.isMethodSecure() && mKeyguardStateController.isShowing()) {
+                  mActivityStarter.postQSRunnableDismissingKeyguard(() -> {
+                    mWindowManagerFuncs.shutdown();
+                });
+            } else {
+                mWindowManagerFuncs.shutdown();
+            }
         }
     }
 
@@ -1016,7 +1042,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
             }
             mUiEventLogger.log(GlobalActionsEvent.GA_REBOOT_LONG_PRESS);
             if (!mUserManager.hasUserRestriction(UserManager.DISALLOW_SAFE_BOOT)) {
-                mWindowManagerFuncs.reboot(true, null);
+                rebootAction(true);
                 return true;
             }
             return false;
@@ -1043,7 +1069,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
             if (mDialog != null && shouldShowRestartSubmenu()) {
                 mDialog.showRestartOptionsMenu();
             } else {
-                mWindowManagerFuncs.reboot(false, null);
+                rebootAction(false);
             }
         }
     }
@@ -1057,7 +1083,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
         @Override
         public boolean onLongPress() {
             if (!mUserManager.hasUserRestriction(UserManager.DISALLOW_SAFE_BOOT)) {
-                mWindowManagerFuncs.reboot(true, null);
+                rebootAction(true);
                 return true;
             }
             return false;
@@ -1075,7 +1101,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
 
         @Override
         public void onPress() {
-            mWindowManagerFuncs.reboot(false, null);
+            rebootAction(false);
         }
     }
 
@@ -1097,7 +1123,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
 
         @Override
         public void onPress() {
-            mWindowManagerFuncs.reboot(false, PowerManager.REBOOT_RECOVERY);
+            rebootAction(false, PowerManager.REBOOT_RECOVERY);
         }
     }
 
@@ -1119,7 +1145,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
 
         @Override
         public void onPress() {
-            mWindowManagerFuncs.reboot(false, PowerManager.REBOOT_BOOTLOADER);
+            rebootAction(false, PowerManager.REBOOT_BOOTLOADER);
         }
     }
 
@@ -1141,7 +1167,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
 
         @Override
         public void onPress() {
-            mWindowManagerFuncs.reboot(false, PowerManager.REBOOT_FASTBOOT);
+            rebootAction(false, PowerManager.REBOOT_FASTBOOT);
         }
     }
 
@@ -1163,7 +1189,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
 
         @Override
         public void onPress() {
-            mWindowManagerFuncs.reboot(false, PowerManager.REBOOT_DOWNLOAD);
+            rebootAction(false, PowerManager.REBOOT_DOWNLOAD);
         }
     }
 
