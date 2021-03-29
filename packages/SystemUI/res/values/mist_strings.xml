@@ -10,6 +10,10 @@
      <!-- Accessibility label for nfc icon (not shown on screen) [CHAR LIMIT=NONE] -->
      <string name="accessibility_status_bar_nfc">Nfc</string>
 
+    <!-- Label for current user in power menu options dialog -->
+    <string name="global_action_current_user">Current</string>
+    <string name="global_action_users">Users</string>
+
      <!-- PowerShare QS tile -->
      <string name="quick_settings_powershare_label">Battery Share</string>
      <string name="quick_settings_powershare_off_powersave_label">Battery Share off\nBattery saver</string>

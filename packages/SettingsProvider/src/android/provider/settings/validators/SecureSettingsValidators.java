@@ -382,5 +382,6 @@ public class SecureSettingsValidators {
                 new DiscreteValueValidator(new String[] {"0", "1", "2"}));
         VALIDATORS.put(Secure.ACCESSIBILITY_FONT_SCALING_HAS_BEEN_CHANGED, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.ADVANCED_REBOOT, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Secure.POWER_MENU_ACTIONS, ANY_STRING_VALIDATOR);
     }
 }
