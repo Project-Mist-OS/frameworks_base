@@ -50,4 +50,7 @@
 
     <!-- Whether device has Google Tensor SoC -->
     <java-symbol type="bool" name="config_hasTensorSoC" />
+
+    <!-- Power menu -->
+    <java-symbol type="array" name="config_restartActionsList" />
 </resources>

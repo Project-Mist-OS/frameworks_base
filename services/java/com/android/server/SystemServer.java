@@ -242,6 +242,8 @@ import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
+// CustomGlobalActionsService
+import com.android.server.custom.globalactions.CustomGlobalActionsService;
 /**
  * Entry point to {@code system_server}.
  */
@@ -2564,6 +2566,11 @@ public final class SystemServer implements Dumpable {
 
             t.traceBegin("StartBackgroundInstallControlService");
             mSystemServiceManager.startService(BackgroundInstallControlService.class);
+            t.traceEnd();
+
+            // CustomGlobalActionsService
+            t.traceBegin("StartCustomGlobalActionsService");
+            mSystemServiceManager.startService(CustomGlobalActionsService.class);
             t.traceEnd();
         }
 
