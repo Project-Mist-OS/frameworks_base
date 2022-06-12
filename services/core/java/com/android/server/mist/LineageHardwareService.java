@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.server.cherish;
+package com.android.server.mist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,15 +28,15 @@ import android.util.Range;
 import com.android.server.LocalServices;
 import com.android.server.SystemService;
 
-import com.android.internal.cherish.hardware.ILineageHardwareService;
-import com.android.internal.cherish.hardware.LineageHardwareManager;
+import com.android.internal.mist.hardware.ILineageHardwareService;
+import com.android.internal.mist.hardware.LineageHardwareManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.android.internal.cherish.app.LineageContextConstants;
+import com.android.internal.mist.app.LineageContextConstants;
 
 
 /** @hide */
