@@ -229,6 +229,7 @@ import com.android.server.wm.WindowManagerGlobalLock;
 import com.android.server.wm.WindowManagerService;
 import com.android.server.mist.LineageGlobalActionsService;
 import com.android.server.mist.display.LiveDisplayService;
+import com.android.server.mist.health.HealthInterfaceService;
 
 import dalvik.system.VMRuntime;
 
@@ -2606,6 +2607,10 @@ public final class SystemServer implements Dumpable {
             // CustomDeviceConfigService
             t.traceBegin("StartCustomDeviceConfigService");
             mSystemServiceManager.startService(CustomDeviceConfigService.class);
+            t.traceEnd();
+
+            t.traceBegin("StartHealthService");
+            mSystemServiceManager.startService(HealthInterfaceService.class);
             t.traceEnd();
         }
 
