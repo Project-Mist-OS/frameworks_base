@@ -113,6 +113,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.SharedLibraryInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningDetails;
+import android.content.pm.UserInfo;
 import android.content.pm.VerifierInfo;
 import android.content.pm.dex.DexMetadataHelper;
 import android.content.pm.parsing.result.ParseResult;
@@ -2093,25 +2094,17 @@ final class InstallPackageHelper {
                     // The caller explicitly specified INSTALL_ALL_USERS flag.
                     // Thus, updating the settings to install the app for all users.
                     for (int currentUserId : allUsers) {
-                        // If the app is already installed for the currentUser,
-                        // keep it as installed as we might be updating the app at this place.
-                        // If not currently installed, check if the currentUser is restricted by
-                        // DISALLOW_INSTALL_APPS or DISALLOW_DEBUGGING_FEATURES device policy.
-                        // Install / update the app if the user isn't restricted. Skip otherwise.
-                        final boolean installedForCurrentUser = ArrayUtils.contains(
-                                installedForUsers, currentUserId);
-                        final boolean restrictedByPolicy =
-                                mPm.isUserRestricted(currentUserId,
-                                        UserManager.DISALLOW_INSTALL_APPS)
-                                || mPm.isUserRestricted(currentUserId,
-                                        UserManager.DISALLOW_DEBUGGING_FEATURES);
-                        if (installedForCurrentUser || !restrictedByPolicy) {
-                            ps.setInstalled(true, currentUserId);
-                            ps.setEnabled(COMPONENT_ENABLED_STATE_DEFAULT, currentUserId,
-                                    installerPackageName);
-                        } else {
-                            ps.setInstalled(false, currentUserId);
+                        UserInfo userInfo =
+                                UserManagerService.getInstance().getUserInfo(currentUserId);
+                        if (userInfo != null && userInfo.isParallel()) {
+                            if (DEBUG_INSTALL) {
+                                Slog.d(TAG, "User " + currentUserId + " is parallel space, skip install");
+                            }
+                            break;
                         }
+                        ps.setInstalled(true, currentUserId);
+                        ps.setEnabled(COMPONENT_ENABLED_STATE_DEFAULT, userId,
+                                installerPackageName);
                     }
                 }
 
