@@ -67,7 +67,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+<<<<<<< HEAD
 import com.android.internal.util.mist.PixelPropsUtils;
+=======
+import com.android.internal.util.cherish.PixelPropsUtils;
+import com.android.internal.util.cherish.GamesPropsUtils;
+>>>>>>> da691f081cb2 (PixelPropUtils: refactor)
 
 /**
  * Base class for implementing application instrumentation code.  When running
@@ -1285,9 +1290,10 @@ public class Instrumentation {
         app.attach(context);
         String packageName = context.getPackageName();
         PixelPropsUtils.setProps(packageName);
+        GamesPropsUtils.setProps(packageName);
         return app;
     }
-    
+
     /**
      * Perform instantiation of the process's {@link Application} object.  The
      * default implementation provides the normal system behavior.
@@ -1304,6 +1310,7 @@ public class Instrumentation {
         app.attach(context);
         String packageName = context.getPackageName();
         PixelPropsUtils.setProps(packageName);
+        GamesPropsUtils.setProps(packageName);
         return app;
     }
 
