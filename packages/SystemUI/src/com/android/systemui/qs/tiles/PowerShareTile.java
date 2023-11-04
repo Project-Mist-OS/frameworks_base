@@ -212,7 +212,7 @@ public class PowerShareTile extends QSTileImpl<QSTile.BooleanState>
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.CHERISH_SETTINGS;
+        return MetricsEvent.MIST_SETTINGS;
     }
 
     @Override
