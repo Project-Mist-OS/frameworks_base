@@ -16,6 +16,9 @@
 
 package com.android.internal.util.mist;
 
+import static android.view.DisplayCutout.BOUNDS_POSITION_LEFT;
+import static android.view.DisplayCutout.BOUNDS_POSITION_RIGHT;
+
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -29,6 +32,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -65,6 +70,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class MistUtils {
+    private static final String TAG = "MistUtils";
+
+    private static final boolean DEBUG = false;
+
+    private static final int NO_CUTOUT = -1;
 
     private static OverlayManager mOverlayService;
 
