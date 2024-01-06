@@ -51,7 +51,7 @@ import android.widget.ImageView;
 
 import com.android.app.animation.Interpolators;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.internal.util.cherish.ImageHelper;
+import com.android.internal.util.mist.ImageHelper;
 import com.android.settingslib.Utils;
 import com.android.systemui.Dumpable;
 import com.android.systemui.R;

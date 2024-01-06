@@ -916,7 +916,7 @@ final class DefaultPermissionGrantPolicy {
         }
 
         // Updater app
-        grantPermissionsToSystemPackage(pm, "com.cherish.updater", userId, NOTIFICATION_PERMISSIONS);
+        grantPermissionsToSystemPackage(pm, "com.mist.updater", userId, NOTIFICATION_PERMISSIONS);
 
         // There is no real "marker" interface to identify the shared storage backup, it is
         // hardcoded in BackupManagerService.SHARED_BACKUP_AGENT_PACKAGE.
