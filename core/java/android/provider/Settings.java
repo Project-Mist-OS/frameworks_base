@@ -118,7 +118,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-import com.android.internal.util.cherish.DeviceConfigUtils;
+import com.android.internal.util.mist.DeviceConfigUtils;
 
 /**
  * The Settings provider contains global system-level device preferences.
