@@ -50,7 +50,7 @@ import android.util.Slog
 
 import com.android.internal.R
 import com.android.internal.annotations.GuardedBy
-import com.android.internal.util.cherish.Utils
+import com.android.internal.util.mist.Utils
 import com.android.server.LocalServices
 import com.android.server.SystemService
 import com.android.server.app.AppLockManagerServiceInternal
